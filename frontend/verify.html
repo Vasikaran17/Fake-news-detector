@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify News — Fake News Detector</title>
+  <meta name="description" content="Enter a news article or claim and check it against currently available information from reliable sources.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="brand-link">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <span>Fake News Detector</span>
+      </a>
+
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="nav-group" id="navGroup">
+        <nav>
+          <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/verify" class="active">Verify News</a></li>
+            <li><a href="/live">Live News</a></li>
+            <li><a href="/history">Analysis History</a></li>
+            <li><a href="/about">About</a></li>
+          </ul>
+        </nav>
+        <a href="/live" class="status-pill trained" id="headerStatusPill" title="Check live system status">
+          <span class="dot"></span> LIVE SYSTEM: Ready
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container" style="max-width: 860px;">
+
+      <!-- Page Heading -->
+      <div style="margin-bottom: 24px;">
+        <h1 class="page-title">Verify News</h1>
+        <p class="page-subtitle">Enter a news article or claim and check it against currently available information.</p>
+      </div>
+
+      <!-- Limitation Notice (Section 26) -->
+      <div class="notice-box" style="margin-bottom: 20px; font-size: 0.88rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <div>
+          <strong>Notice:</strong> Automated verification is an assistive tool, not a guarantee of truth. Breaking news may require additional human verification.
+        </div>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="verifyAlertContainer"></div>
+
+      <!-- Main Input Card -->
+      <div class="card">
+        
+        <!-- Tab Navigation (Option A vs Option B) -->
+        <div class="tab-nav">
+          <button type="button" class="tab-btn active" data-tab="tabText" id="tabBtnText">
+            Option A — Enter News Text
+          </button>
+          <button type="button" class="tab-btn" data-tab="tabFile" id="tabBtnFile">
+            Option B — Upload Text File
+          </button>
+        </div>
+
+        <!-- TAB 1: Enter News Text -->
+        <div class="tab-content active" id="tabText">
+          <label for="newsTextarea" style="font-weight:600; font-size:0.92rem; display:block; margin-bottom:8px; color:var(--text-main);">
+            News Article or Claim
+          </label>
+          <textarea 
+            id="newsTextarea" 
+            class="news-textarea" 
+            placeholder="Paste the news article or claim you want to verify..."
+            rows="8"
+          ></textarea>
+
+          <div class="textarea-footer">
+            <span id="wordCharCounter">0 words &bull; 0 characters</span>
+            <button type="button" class="btn btn-secondary btn-sm" id="clearTextBtn" style="padding:4px 10px; font-size:0.8rem;">
+              Clear Text
+            </button>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-primary" id="analyzeTextBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              Verify News
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 2: Upload Text File -->
+        <div class="tab-content" id="tabFile">
+          <div class="file-dropzone" id="txtDropzone">
+            <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <div class="dropzone-text">Drag and drop a .txt news file here</div>
+            <div class="dropzone-subtext">The user can upload .txt files for verification</div>
+            <div style="margin-top: 14px;">
+              <button type="button" class="btn btn-secondary btn-sm" id="browseTxtBtn">
+                Choose Text File
+              </button>
+            </div>
+            <input type="file" id="txtFileInput" class="hidden-file-input" accept=".txt,.text">
+          </div>
+
+          <!-- File Info Badge -->
+          <div id="txtFileInfoBadge" class="file-info-badge" style="display:none;"></div>
+
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-primary" id="analyzeFileBtn" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Upload &amp; Verify
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Evidence-Based Verification Result Card (Hidden until analysis is performed) -->
+      <div id="predictionResultCard" class="result-card" style="display:none;">
+        
+        <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:8px;">
+          VERIFICATION RESULT
+        </div>
+
+        <div class="result-header">
+          <div>
+            <div id="verdictBadge" class="verdict-badge">
+              <!-- Dynamically populated: REAL, FAKE, or UNCERTAIN -->
+            </div>
+            <div id="statusMeaning" style="font-size:0.9rem; color:var(--text-muted); margin-top:8px; font-weight:500;">
+              <!-- Dynamically populated explanation -->
+            </div>
+          </div>
+
+          <div class="confidence-display">
+            <div class="confidence-label">Confidence</div>
+            <div id="confidenceValue" class="confidence-value">0%</div>
+          </div>
+        </div>
+
+        <!-- Dynamic Confidence Progress Bar -->
+        <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:0.82rem; color:var(--text-muted);">
+          <span>Confidence Level</span>
+          <span id="sourcesCheckedCount">0 sources checked</span>
+        </div>
+        <div class="progress-track">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+
+        <!-- Summary Banner -->
+        <div id="evidenceSummaryBanner" class="analysis-note" style="margin-bottom:18px;">
+          <!-- Dynamically populated summary -->
+        </div>
+
+        <!-- "Why?" Section -->
+        <div class="evidence-section" id="whySection">
+          <div class="evidence-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Why? Evidence Breakdown</span>
+          </div>
+
+          <!-- Supporting Evidence Container -->
+          <div id="supportingEvidenceContainer" style="margin-bottom:16px;">
+            <div style="font-size:0.85rem; font-weight:700; color:var(--real-dark); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;">
+              Supporting Evidence
+            </div>
+            <div id="supportingList" class="evidence-list"></div>
+          </div>
+
+          <!-- Contradicting Evidence Container -->
+          <div id="contradictingEvidenceContainer" style="margin-bottom:16px; display:none;">
+            <div style="font-size:0.85rem; font-weight:700; color:var(--fake-dark); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;">
+              Contradicting Evidence
+            </div>
+            <div id="contradictingList" class="evidence-list"></div>
+          </div>
+
+          <!-- Contextual Evidence Container -->
+          <div id="contextEvidenceContainer" style="margin-bottom:16px; display:none;">
+            <div style="font-size:0.85rem; font-weight:700; color:#92400e; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;">
+              Contextual / Related Mentions
+            </div>
+            <div id="contextList" class="evidence-list"></div>
+          </div>
+
+          <!-- When no evidence was found online -->
+          <div id="noEvidenceNotice" class="notice-box warn" style="display:none;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div>
+              <strong>Not enough reliable evidence was found to confidently classify this claim.</strong><br>
+              No evidence is not automatically evidence of falsity. The claim has been marked UNCERTAIN pending further verifiable reports.
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Signals & Extracted Claims -->
+        <div class="details-collapsible">
+          <div style="font-weight:600; margin-bottom:8px; color:var(--text-main);">
+            Pipeline Signals &amp; Claim Analysis:
+          </div>
+          <div style="display:flex; gap:16px; flex-wrap:wrap; font-size:0.85rem; line-height:1.6;">
+            <div>ML Prior Signal: <strong id="mlPriorDisplay">--</strong> (<span id="mlProbDisplay">--</span>)</div>
+            <div>Claim Extracted: <code id="claimExtractedDisplay" style="background:var(--bg-subtle); padding:2px 6px; border-radius:4px;">--</code></div>
+            <div>Entities: <span id="entitiesDisplay" style="color:var(--text-muted);">--</span></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Fake News Detector</strong> &bull; B.Tech AI &amp; Data Science Project
+      </div>
+      <div>
+        Built with Python Flask, Scikit-learn, NLTK, SQLite, and Live News Feeds
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/verify.js"></script>
+</body>
+</html>

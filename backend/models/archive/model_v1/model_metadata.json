@@ -1,0 +1,49 @@
+{
+  "is_trained": true,
+  "algorithm": "Logistic Regression",
+  "vectorizer": "TF-IDF (ngram_range=(1,2), max_features=5000)",
+  "training_date": "2026-10-01 17:48:54",
+  "file_size_mb": 81.88,
+  "total_samples": 34107,
+  "training_samples": 27285,
+  "testing_samples": 6822,
+  "dataset_sampling_note": null,
+  "dataset_distribution": {
+    "REAL": 17057,
+    "FAKE": 17050
+  },
+  "performance": {
+    "accuracy": 98.14,
+    "accuracy_ratio": 0.9814,
+    "precision": 97.48,
+    "precision_ratio": 0.9748,
+    "recall": 98.83,
+    "recall_ratio": 0.9883,
+    "f1_score": 98.15,
+    "f1_score_ratio": 0.9815
+  },
+  "confusion_matrix": {
+    "matrix": [
+      [
+        3372,
+        40
+      ],
+      [
+        87,
+        3323
+      ]
+    ],
+    "labels": [
+      "REAL",
+      "FAKE"
+    ],
+    "actual_real_pred_real": 3372,
+    "actual_real_pred_fake": 40,
+    "actual_fake_pred_real": 87,
+    "actual_fake_pred_fake": 3323
+  },
+  "classes": [
+    "FAKE",
+    "REAL"
+  ]
+}
